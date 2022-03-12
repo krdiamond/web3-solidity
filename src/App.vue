@@ -2,14 +2,16 @@
   
  <div>
    <button @click="connect" v-if="account == 0">connect</button>
-   <button @click="connect" v-else>yey you are connected</button>
+   <button v-else>yey you are connected</button>
   </div>  
 
 <div>
-  <button v-if="hasAccess && account.length > 0">DOWNLOAD</button>
+  <button v-if="hasAccess && account.length > 0" @click="download">DOWNLOAD</button>
   <button v-else-if="canBuy & account.length > 0" @click="buy">BUY FOR 0.01 ETH</button>
   <button v-else>SORRY YOU CANNOT BUUY</button>
 </div>
+
+Can Buy ??:  {{canBuy}}
 
 <div >{{totalSales}} / 100 Sold</div>
 
@@ -18,7 +20,7 @@
 </template>
 
 <script>
-import { web3, contract } from '../lib/web3'
+import { web3, contract, signDownloadMessage } from '../lib/web3'
 
 export default {
   name: 'App',
@@ -27,6 +29,7 @@ export default {
     return {
       contract,
       web3,
+      signDownloadMessage,
       canBuy: false,
       totalSales: 0,
       account: [],
@@ -71,6 +74,7 @@ export default {
     fetchCanBuy() {
       this.contract.methods.canBuy().call()
         .then(response => {
+          console.log(response);
             this.canBuy = response;
         });
 
@@ -105,6 +109,13 @@ export default {
         });
       }else {
         this.hasAccess = false;
+      }
+    },
+    async download() {
+      if (this.account.length > 0) {
+        await this.web3.eth.personal.sign(this.signDownloadMessage, this.account[0]);
+      } else {
+        alert("must be logged in")
       }
     }
   }

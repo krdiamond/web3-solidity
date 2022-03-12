@@ -17,8 +17,8 @@ contract Sale {
     totalSales = 0;
     maxSales = 100;
 
-    owner = 0x7fD0c7D34A68200242C274CFDaA19FDEb08e0d62;
-    charity = 0x9A9Cc0B27E4A20784a55E6De400Ca9A4D71Cf542;
+    owner = msg.sender;
+    charity = 0xF5AD7e98c10Cd22f340EF799B2a51BfF7664a041;
   }
 
   function canBuy () public view returns (bool) { 
